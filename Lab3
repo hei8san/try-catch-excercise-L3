@@ -1,0 +1,151 @@
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		boolean dowhile = true;
+		boolean dowhile3rd = true;
+		boolean dowhile4th = true;
+		boolean valid = true;
+		ArrayList<Student> members = new ArrayList<>();
+		int selected = 0;
+		String name = "";
+		int grade = 0;
+		int changedGrade = 0;
+		int changedName = 0;
+
+		while (selected != 3) {
+
+			System.out.println("Main menu\n");
+			dowhile = true;
+
+			do {
+				try {
+					System.out.println("Select one of the following options");
+					System.out.println("1. Add a Student\n2. Edit student grades\n3. Exit");
+					selected = sc.nextInt();
+
+					if (selected < 1 || selected > 3) {
+						throw new InputMismatchException();
+					} else if (selected == 2 && members.size() == 0) {
+						System.out.println("Please add a student before typing a grade.");
+						sc.nextLine();
+						continue;
+					} else {
+
+						dowhile = false;
+					}
+
+				} catch (InputMismatchException e) {
+					System.out.println("This is wrong input. Please type 1 to 3 included integer.");
+					sc.nextLine();
+				}
+
+			} while (dowhile);
+
+			if (selected == 1) {
+
+				System.out.println("Please enter the students name: ");
+				name = sc.next();
+				dowhile3rd = true;
+				do {
+					try {
+						System.out.println("Please enter a grade for " + name + ":");
+						grade = sc.nextInt();
+						if (0 <= grade && grade <= 100) {
+							Student a = new Student(name, grade);
+							members.add(a);
+							dowhile3rd = false;
+						} else {
+							throw new InputMismatchException();
+						}
+					} catch (InputMismatchException e) {
+						System.out.println("Please type Integer between 0 to 100 inclusive");
+						sc.nextLine();
+					}
+
+				} while (dowhile3rd);
+			}
+			if (selected == 2) {
+				dowhile4th = true;
+				valid = true;
+				do {
+
+					for (int j = 1; j <= members.size(); j++) {
+						System.out.println(j + ") " + members.get(j - 1).toString());
+					}
+
+					try {
+						changedName = sc.nextInt();
+						if (members.size() < changedName) {
+							throw new Exception();
+						} else {
+
+							do {
+								try {
+									System.out.println(
+											"Please enter a grade for " + members.get(changedName - 1).getName());
+
+									changedGrade = sc.nextInt();
+									if (0 <= changedGrade && changedGrade <= 100) {
+										Student b = new Student(members.get(changedName - 1).getName(), changedGrade);
+										members.set(changedName - 1, b);
+										dowhile4th = false;
+										valid = false;
+									} else {
+										throw new InputMismatchException();
+									}
+								} catch (InputMismatchException e) {
+									System.out.println("Please type Integer between 0 to 100 inclusive");
+									sc.nextLine();
+								}
+							} while (valid);
+						}
+
+					} catch (Exception e) {
+						System.out.println("Please select the student who is on the list.");
+						System.out.println("What student would you like to enter a grade for?");
+						sc.nextLine();
+
+					}
+				} while (dowhile4th);
+
+			}
+
+		}
+		System.out.println("Thank you, Goodbye!");
+
+	}
+}
+
+class Student {
+	String name;
+	int grade;
+
+	public Student(String name, int grade) {
+		this.name = name;
+		this.grade = grade;
+
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+
+	@Override
+	public String toString() {
+		return name + " - " + grade;
+	}
+
+}
